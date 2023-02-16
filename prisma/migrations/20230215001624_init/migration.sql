@@ -11,6 +11,7 @@ CREATE TABLE "users" (
 CREATE TABLE "Url" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "url" TEXT NOT NULL,
+    "short_url" TEXT NOT NULL,
     "userId" INTEGER,
     CONSTRAINT "Url_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users" ("id") ON DELETE SET NULL ON UPDATE CASCADE
 );

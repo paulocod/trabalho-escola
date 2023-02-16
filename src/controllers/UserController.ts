@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { PrismaClient } from "@prisma/client";
 import { UserService } from "../services/UserService";
 
 export class UserController {
@@ -11,5 +12,11 @@ export class UserController {
     console.log(user);
 
     return res.status(200).json({ name, email });
+  }
+  async allUsers(req: Request, res: Response) {
+    const service = new UserService();
+    const allUsers = await service.allUsersService();
+
+    return res.status(200).json({ allUsers });
   }
 }
