@@ -1,28 +1,26 @@
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { prisma } from '../prisma/index'
 
 interface urlProps {
-  url: string;
+  url: string
   shortUrl: string
 }
 
 export class UrlRepository {
-  async createShortUrl({ url, shortUrl }: urlProps) {
+  async createShortUrl ({ url, shortUrl }: urlProps) {
     const urlResponse = await prisma.url.create({
       data: {
         url,
-        short_url: shortUrl,
-      },
-    });
+        short_url: shortUrl
+      }
+    })
 
-    return urlResponse;
+    return urlResponse
   }
 
-  async shortUrlExists(short_url: string) {
+  async shortUrlExists (shortUrl: string) {
     const shortUrlExist = await prisma.url.findFirst({
-      where: { short_url },
-    });
+      where: { short_url: shortUrl }
+    })
     return shortUrlExist
   }
 }
