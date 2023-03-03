@@ -1,10 +1,7 @@
-import express from "express";
-import { router } from "./routes";
+import { app } from "./app";
 
-const app = express();
-app.use(express.json());
-app.use(router);
+const port = process.env.PORT || 3000
 
-app.listen(3030, () => {
-  console.log("🚀 servidor O N L I N E");
+app.listen(port, () => {
+  console.log(`🚀 servidor O N L I N E ${port}`);
 });
