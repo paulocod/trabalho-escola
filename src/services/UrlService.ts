@@ -33,7 +33,6 @@ export class UrlService {
         return data.urlEncurtada;
       });
 
-    console.log(shortUrl);
 
     const urlResponse = await prisma.url.create({
       data: {

@@ -5,7 +5,6 @@ export class UrlController {
   async create(req: Request, res: Response) {
     const { url } = req.body;
 
-    console.log(url);
 
     const service = new UrlService();
     const urlResponse = await service.createUrl({ url });

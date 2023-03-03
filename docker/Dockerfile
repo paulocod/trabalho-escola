@@ -1,0 +1,13 @@
+FROM node:alpine
+
+WORKDIR /usr/src
+
+COPY . /usr/src
+
+RUN npm ci
+
+RUN npx prisma generate
+
+EXPOSE 3030
+
+CMD ["npm", "run", "dev"]
