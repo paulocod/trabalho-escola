@@ -1,9 +1,11 @@
 import { UserRepository } from '../repositories/UserRepository'
+import { createHash } from 'node:crypto'
 
 interface UserProps {
   name: string
   email: string
   password: string
+  passwordHash: string
 }
 
 export class UserService {
@@ -17,7 +19,9 @@ export class UserService {
     if (emailExists) {
       throw new Error('Esse email ja esta cadastrado')
     }
-    await userRepository.createUserRepository({ name, email, password })
+    const passwordHash = createHash('sha256').update(password).digest('hex')
+
+    await userRepository.createUserRepository({ name, email, passwordHash })
   }
 
   async allUsersService () {

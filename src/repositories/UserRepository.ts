@@ -1,17 +1,16 @@
 import { prisma } from '../prisma/index'
-
 interface UserProps {
   name: string
   email: string
-  password: string
+  passwordHash: string
 }
 export class UserRepository {
-  async createUserRepository ({ name, email, password }: UserProps) {
+  async createUserRepository ({ name, email, passwordHash }: UserProps) {
     const user = await prisma.user.create({
       data: {
         name,
         email,
-        password
+        password: passwordHash
       }
     })
 
