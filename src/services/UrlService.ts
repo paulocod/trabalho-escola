@@ -35,7 +35,7 @@ export class UrlService {
 
     const urlResponse = await prisma.url.create({
       data: {
-        url: url,
+        url,
         short_url: shortUrl,
       },
     });
@@ -45,11 +45,11 @@ export class UrlService {
 
   async findShortUrlService(short_url: string) {
     if (!short_url) {
-      throw new Error("error em short_url");
+      throw new Error("error uma short url tem que ser passada");
     }
 
     const shortUrlExist = await prisma.url.findFirst({
-      where: { short_url: short_url },
+      where: { short_url },
     });
 
     const url = shortUrlExist?.url;
