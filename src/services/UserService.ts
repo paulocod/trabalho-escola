@@ -33,7 +33,6 @@ export class UserService {
   }
   async allUsersService() {
     const users = await prisma.user.findMany();
-    console.log(users);
     if (!users) {
       return "Não existe nenhum usuario no banco de dados";
     }

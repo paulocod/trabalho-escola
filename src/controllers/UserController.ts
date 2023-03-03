@@ -8,8 +8,7 @@ export class UserController {
     const { name, email, password } = req.body;
 
     const service = new UserService();
-    const user = await service.createUserService({ name, email, password });
-    console.log(user);
+    await service.createUserService({ name, email, password });
 
     return res.status(200).json({ name, email });
   }
