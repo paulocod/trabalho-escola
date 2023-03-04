@@ -5,7 +5,7 @@ interface UserProps {
   passwordHash: string
 }
 export class UserRepository {
-  async createUserRepository ({ name, email, passwordHash }: UserProps) {
+  async createUser ({ name, email, passwordHash }: UserProps) {
     const user = await prisma.user.create({
       data: {
         name,
@@ -14,6 +14,15 @@ export class UserRepository {
       }
     })
 
+    return user
+  }
+
+  async findOneUser (id: string) {
+    const user = await prisma.user.findFirst({
+      where: {
+        id
+      }
+    })
     return user
   }
 

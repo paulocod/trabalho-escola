@@ -1,11 +1,11 @@
 import { UserRepository } from '../repositories/UserRepository'
 import { createHash } from 'node:crypto'
+import { redisClient } from '../helpers/redis'
 
 interface UserProps {
   name: string
   email: string
   password: string
-  passwordHash: string
 }
 
 export class UserService {
@@ -21,7 +21,26 @@ export class UserService {
     }
     const passwordHash = createHash('sha256').update(password).digest('hex')
 
-    await userRepository.createUserRepository({ name, email, passwordHash })
+    await userRepository.createUser({ name, email, passwordHash })
+  }
+
+  async detailUserService (id: string) {
+    const userRepository = new UserRepository()
+    console.time()
+    const userCache = await redisClient.get(`user-${id}`)
+    if (userCache) {
+      console.log('redis')
+      console.timeEnd()
+      return userCache
+    }
+    console.time()
+    const user = await userRepository.findOneUser(id)
+    if (!user) {
+      throw new Error('Não existe nenhum usuario no banco de dados')
+    }
+    console.log('banco')
+    console.timeEnd()
+    return user
   }
 
   async allUsersService () {

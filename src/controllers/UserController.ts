@@ -14,6 +14,18 @@ export class UserController {
     }
   }
 
+  async detailUser (req: Request, res: Response) {
+    const { id } = req.params
+    const service = new UserService()
+    try {
+      const user = await service.detailUserService(id)
+      return res.status(200).send(user)
+    } catch (error) {
+      console.log(error)
+      return res.status(400).send({ error: 'Ocorreu um erro com a aplicação' })
+    }
+  }
+
   async allUsers (req: Request, res: Response) {
     const service = new UserService()
     try {

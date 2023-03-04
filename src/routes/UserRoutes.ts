@@ -8,5 +8,6 @@ const userRouter = Router()
 userRouter.post('/user', ensureAuthenticated, new UserController().create)
 userRouter.post('/auth', new AuthController().create)
 userRouter.get('/', ensureAuthenticated, new UserController().allUsers)
+userRouter.get('/user/:id', ensureAuthenticated, new UserController().detailUser)
 
 export { userRouter }

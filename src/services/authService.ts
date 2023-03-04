@@ -1,6 +1,7 @@
 import { SignJWT } from 'jose'
 import { createHash } from 'node:crypto'
 import { UserRepository } from '../repositories/UserRepository'
+import { redisClient } from '../helpers/redis'
 
 interface AuthProps {
   email: string
@@ -24,12 +25,13 @@ export class AuthService {
     if (!passwordMatch) {
       throw new Error('User or password incorrect.')
     }
-    const token = await new SignJWT({
-    })
+    const token = await new SignJWT({})
       .setProtectedHeader({ alg })
       .setExpirationTime('2h')
       .sign(jwtSecret)
 
+    await redisClient.set(`user-${userAlreadyExists.id}`, JSON.stringify(userAlreadyExists))
+    console.log(`add ao redis id: ${userAlreadyExists.name}`)
     return { token }
   }
 }
