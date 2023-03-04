@@ -18,6 +18,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 0,
     '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/strict-boolean-expressions': 0,
-    '@typescript-eslint/no-confusing-void-expression': 0
+    '@typescript-eslint/no-confusing-void-expression': 0,
+    '@typescript-eslint/prefer-readonly':0
   }
 }

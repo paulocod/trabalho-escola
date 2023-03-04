@@ -1,12 +1,15 @@
-import { UrlRepository } from '../repositories/UrlRepository'
+import { type UrlRepository } from '../../repositories/UrlRepository'
 
 interface urlProps {
   url: string
 }
 
 export class UrlService {
+  constructor (
+    private urlRepository: UrlRepository
+  ) {}
+
   async createUrl ({ url }: urlProps) {
-    const urlRepository = new UrlRepository()
     if (!url) {
       throw new Error('url is required')
     }
@@ -32,18 +35,17 @@ export class UrlService {
         return data.urlEncurtada
       })
 
-    const urlResponse = await urlRepository.createShortUrl({ url, shortUrl })
+    const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrl })
 
     return urlResponse
   }
 
   async findShortUrlService (shortUrl: string) {
-    const urlRepository = new UrlRepository()
     if (!shortUrl) {
       throw new Error('error uma short url tem que ser passada')
     }
 
-    const shortUrlExist = await urlRepository.shortUrlExists(shortUrl)
+    const shortUrlExist = await this.urlRepository.shortUrlExists(shortUrl)
 
     const url = shortUrlExist?.url
 

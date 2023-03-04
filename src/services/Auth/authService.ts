@@ -1,7 +1,7 @@
 import { SignJWT } from 'jose'
 import { createHash } from 'node:crypto'
-import { UserRepository } from '../repositories/UserRepository'
-import { redisClient } from '../helpers/redis'
+import { type UserRepository } from '../../repositories/UserRepository'
+import { redisClient } from '../../helpers/redis'
 
 interface AuthProps {
   email: string
@@ -9,13 +9,16 @@ interface AuthProps {
 }
 
 export class AuthService {
+  constructor (
+    private userRepository: UserRepository
+  ) { }
+
   async createToken ({ email, password }: AuthProps) {
     const jwtSecret = new TextEncoder().encode(process.env.JWT_APP_SECRET)
     const alg = 'HS256'
-    const passwordHash = createHash('sha256').update(password).digest('hex')
 
-    const userRepository = new UserRepository()
-    const userAlreadyExists = await userRepository.findUserEmail(email)
+    const passwordHash = createHash('sha256').update(password).digest('hex')
+    const userAlreadyExists = await this.userRepository.findUserEmail(email)
 
     if (!userAlreadyExists) {
       throw new Error('User or password incorrect.')

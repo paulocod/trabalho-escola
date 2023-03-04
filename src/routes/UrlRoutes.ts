@@ -1,10 +1,14 @@
 import { Router } from 'express'
-import { UrlController } from '../controllers/UrlController'
+import { urlController } from '../services/Url'
 import { ensureAuthenticated } from '../middlewares/ensureAuthenticated'
 
 const urlRouter = Router()
 
-urlRouter.post('/user/url', ensureAuthenticated, new UrlController().create)
-urlRouter.post('/user/shorturl', ensureAuthenticated, new UrlController().findUrlShort)
+urlRouter.post('/user/url', ensureAuthenticated, async (req, res) => {
+  return await urlController.create(req, res)
+})
+urlRouter.post('/user/shorturl', ensureAuthenticated, async (req, res) => {
+  return await urlController.findUrlShort(req, res)
+})
 
 export { urlRouter }
