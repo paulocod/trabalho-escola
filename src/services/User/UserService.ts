@@ -24,7 +24,8 @@ export class UserService {
     }
     const passwordHash = createHash('sha256').update(password).digest('hex')
 
-    await this.userRepository.createUser({ name, email, passwordHash })
+    const user = await this.userRepository.createUser({ name, email, passwordHash })
+    return user
   }
 
   async detailUserService (id: string) {
@@ -47,7 +48,7 @@ export class UserService {
 
   async allUsersService () {
     const users = await this.userRepository.findAllUsers()
-    if (!users) {
+    if (!users.length) {
       throw new Error('Não existe nenhum usuario no banco de dados')
     }
     return users

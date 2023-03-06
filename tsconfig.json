@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "types": ["vitest/globals"],
     "declaration": true,
     "lib": ["es2021"],
     "moduleResolution": "node",

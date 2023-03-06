@@ -7,7 +7,7 @@ interface urlProps {
 export class UrlService {
   constructor (
     private urlRepository: UrlRepository
-  ) {}
+  ) { }
 
   async createUrl ({ url }: urlProps) {
     if (!url) {
@@ -36,7 +36,6 @@ export class UrlService {
       })
 
     const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrl })
-
     return urlResponse
   }
 

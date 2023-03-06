@@ -19,6 +19,8 @@ module.exports = {
     '@typescript-eslint/no-misused-promises': 0,
     '@typescript-eslint/strict-boolean-expressions': 0,
     '@typescript-eslint/no-confusing-void-expression': 0,
-    '@typescript-eslint/prefer-readonly':0
+    '@typescript-eslint/prefer-readonly': 0,
+    '@typescript-eslint/await-thenable': 0,
+    '@typescript-eslint/ban-ts-comment': 0
   }
 }
