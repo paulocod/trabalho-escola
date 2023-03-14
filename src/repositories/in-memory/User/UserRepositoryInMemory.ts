@@ -16,10 +16,11 @@ export class UserRepositoryInMemory {
       passwordHash,
       id: ''
     }
-
-    Object.assign(user, {
-      id: randomUUID()
-    })
+    if (!user.id) {
+      Object.assign(user, {
+        id: randomUUID()
+      })
+    }
     this.users.push(user)
     return user
   }

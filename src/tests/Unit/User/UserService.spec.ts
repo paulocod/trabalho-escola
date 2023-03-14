@@ -1,5 +1,6 @@
 // @ts-nocheck
-import { test, expect, describe, beforeEach } from 'vitest'
+// sut = system under test
+import { test, expect, describe, beforeEach, afterEach, vi } from 'vitest'
 import { UserRepositoryInMemory } from '../../../repositories/in-memory/User/UserRepositoryInMemory'
 import { UserService } from '../../../services/User/UserService'
 
@@ -10,6 +11,10 @@ describe('User', () => {
   beforeEach(() => {
     userRepository = new UserRepositoryInMemory()
     userService = new UserService(userRepository)
+  })
+
+  afterEach(() => {
+    vi.resetAllMocks()
   })
 
   test('Deve ser possivel criar um usuario', async () => {
@@ -29,6 +34,15 @@ describe('User', () => {
     expect(user.name).toBe('paulo')
     expect(user).toBeDefined()
     expect(user).toMatchObject(userDataMock)
+  })
+
+  test('Deve ser possivel detalhar usuario', async () => {
+    vi.mock('../../../services/User/UserService', () => {
+      const redisClientMock = vi.fn()
+      redisClientMock.mockResolvedValue({ mock: true })
+    })
+    expect(userService.createUserService(userData))
+    expect(userService.detailUserService())
   })
 
   test('Não deve ser possivel cadastrar email existente', async () => {
@@ -60,7 +74,7 @@ describe('User', () => {
       email: 'paulo@hotmail.com',
       password: '12345678'
     }
-    await expect(userService.createUserService(userData))
+    expect(userService.createUserService(userData))
     expect(userService.allUsersService()).toBeDefined()
     expect(userService.allUsersService()).toBeTypeOf('object')
   })
