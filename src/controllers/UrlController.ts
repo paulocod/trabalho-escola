@@ -12,9 +12,9 @@ export class UrlController {
     return res.status(200).json({ url: urlResponse });
   }
   async findUrlShort(req: Request, res: Response) {
-    const { short_url } = req.body;
+    const { shortUrl } = req.body;
     const service = new UrlService();
-    const urlResponse = await service.findShortUrlService(short_url);
+    const urlResponse = await service.findShortUrlService(shortUrl);
     return res.status(200).json({ full_url: urlResponse });
   }
 }

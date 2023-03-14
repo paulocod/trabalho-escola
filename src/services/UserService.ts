@@ -36,6 +36,7 @@ export class UserService {
     if (!users) {
       return "Não existe nenhum usuario no banco de dados";
     }
+    console.log('essse esta rodando em outro servidor')
     return users;
   }
 }

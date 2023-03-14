@@ -1,56 +1,45 @@
 import { PrismaClient } from "@prisma/client";
+import { nanoid } from 'nanoid';
 
 const prisma = new PrismaClient();
 
 interface urlProps {
   url: string;
 }
-
 export class UrlService {
   async createUrl({ url }: urlProps) {
     if (!url) {
       throw new Error("url is required");
     }
 
-    const objUrl = {
-      url,
-    };
+    const urlExists = await prisma.url.findFirst({
+      where: {
+        url
+      }
+    })
 
-    const options = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(objUrl),
-    };
+    if (urlExists) {
+      throw new Error('Essa url já existe');
+    }
 
-    const shortUrl = await fetch(
-      "https://api.encurtador.dev/encurtamentos",
-      options
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        return data.urlEncurtada;
-      });
-
+    const urlCode = nanoid()
+    const shortUrlCode = `acesse/${urlCode}`
 
     const urlResponse = await prisma.url.create({
       data: {
         url: url,
-        short_url: shortUrl,
+        short_url: shortUrlCode,
       },
     });
-
     return urlResponse;
   }
 
-  async findShortUrlService(short_url: string) {
-    if (!short_url) {
+  async findShortUrlService(shortUrl: string) {
+    if (!shortUrl) {
       throw new Error("error em short_url");
     }
-
     const shortUrlExist = await prisma.url.findFirst({
-      where: { short_url: short_url },
+      where: { short_url: shortUrl },
     });
 
     const url = shortUrlExist?.url;
