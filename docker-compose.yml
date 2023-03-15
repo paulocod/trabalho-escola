@@ -8,6 +8,10 @@ services:
     container_name: server1
     ports:
       - "3030:3030"
+    links:
+    - redis
+    environment:
+    - REDIS_URL=redis://redis
     depends_on:
             - webserver
 
@@ -16,6 +20,10 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     container_name: server2
+    links:
+    - redis
+    environment:
+    - REDIS_URL=redis://redis
     depends_on:
             - webserver
 
@@ -24,6 +32,10 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     container_name: server3
+    links:
+    - redis
+    environment:
+    - REDIS_URL=redis://redis
     depends_on:
             - webserver
 
@@ -32,8 +44,18 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
     container_name: server4
+    links:
+    - redis
+    environment:
+    - REDIS_URL=redis://redis
     depends_on:
             - webserver
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    expose:
+            - 6379
 
   webserver:
     image: nginx:mainline-alpine

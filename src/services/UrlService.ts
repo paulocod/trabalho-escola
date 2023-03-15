@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { nanoid } from 'nanoid';
+import { redisClient } from "../helpers/redis";
 
 const prisma = new PrismaClient();
 
@@ -32,6 +33,33 @@ export class UrlService {
       },
     });
     return urlResponse;
+  }
+
+  async RealFindShortUrlService(id: string) {
+    if (!id) {
+      throw new Error("url não existe");
+    }
+
+    console.time()
+    const urlCache = await redisClient.get(`id-${id}`)
+    console.timeEnd()
+
+    if (urlCache) {
+      console.log('pegou do redis')
+      return urlCache
+    }
+
+    console.time()
+    const shortUrl = await prisma.url.findFirst({
+      where: { id },
+    });
+    console.log('pegou do banco')
+    console.timeEnd()
+
+    await redisClient.set(`id-${id}`, JSON.stringify(shortUrl))
+    console.log('salvou no redis')
+
+    return shortUrl;
   }
 
   async findShortUrlService(shortUrl: string) {

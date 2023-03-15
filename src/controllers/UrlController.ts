@@ -17,4 +17,11 @@ export class UrlController {
     const urlResponse = await service.findShortUrlService(shortUrl);
     return res.status(200).json({ full_url: urlResponse });
   }
+
+  async getUrl(req: Request, res: Response) {
+    const { id } = req.params;
+    const service = new UrlService();
+    const urlResponse = await service.RealFindShortUrlService(id);
+    return res.status(200).json({ full_url: urlResponse });
+  }
 }
