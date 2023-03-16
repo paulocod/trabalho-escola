@@ -1,0 +1,20 @@
+version: '3.7'
+
+services:
+  server-node:
+    build:
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
+    container_name: server-node
+    ports:
+      - "3030:3030"
+    environment:
+    - REDIS_URL=${REDIS_URL}
+    links:
+    - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    expose:
+            - 6379
