@@ -9,7 +9,7 @@ services:
     ports:
       - "3030:3030"
     environment:
-    - REDIS_URL=${REDIS_URL}
+    - REDIS_URL=redis://redis
     links:
     - redis
 
@@ -18,3 +18,5 @@ services:
     container_name: redis
     expose:
             - 6379
+    volumes:
+      - ./data:/data
