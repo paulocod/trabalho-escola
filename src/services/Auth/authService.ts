@@ -1,7 +1,7 @@
 import { SignJWT } from 'jose'
 import { createHash } from 'node:crypto'
-import { type UserRepository } from '../../repositories/UserRepository'
 import { redisClient } from '../../helpers/redis'
+import { type UserRepository } from '../../repositories/UserRepository'
 
 interface AuthProps {
   email: string
@@ -32,8 +32,11 @@ export class AuthService {
       .setProtectedHeader({ alg })
       .setExpirationTime('2h')
       .sign(jwtSecret)
-
-    await redisClient.set(`user-${userAlreadyExists.id}`, JSON.stringify(userAlreadyExists))
+    try {
+      await redisClient.set(`user-${userAlreadyExists.id}`, JSON.stringify(userAlreadyExists))
+    } catch (error) {
+      throw new Error('não foi possivel salvar a chave ao redis')
+    }
     console.log(`add ao redis id: ${userAlreadyExists.name}`)
     return { token }
   }

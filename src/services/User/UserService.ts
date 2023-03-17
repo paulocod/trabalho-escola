@@ -1,6 +1,6 @@
-import { type UserRepository } from '../../repositories/UserRepository'
 import { createHash } from 'node:crypto'
 import { redisClient } from '../../helpers/redis'
+import { type UserRepository } from '../../repositories/UserRepository'
 
 interface UserProps {
   name: string
@@ -28,13 +28,17 @@ export class UserService {
     return user
   }
 
-  async detailUserService (id: string) {
-    console.time()
-    const userCache = await redisClient.get(`user-${id}`)
-    if (userCache) {
-      console.log('redis')
-      console.timeEnd()
-      return userCache
+  async detailUsersService (id: string) {
+    try {
+      console.time()
+      const userCache = await redisClient.get(`user-${id}`)
+      if (userCache) {
+        console.log('redis')
+        console.timeEnd()
+        return userCache
+      }
+    } catch (error) {
+      throw new Error('não foi possivel se conectar ao Redis')
     }
     console.time()
     const user = await this.userRepository.findOneUser(id)
