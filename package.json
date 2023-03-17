@@ -21,11 +21,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "helmet": "^6.0.1",
     "jose": "^4.13.1",
+    "prisma": "^4.10.1",
     "redis": "^4.6.5",
     "tsup": "^6.6.3",
-    "helmet": "^6.0.1",
-    "prisma": "^4.10.1",
     "vitest": "^0.29.2"
   },
   "devDependencies": {
