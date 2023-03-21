@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "type": "module",
+  "tsup": {
+    "entry": ["src/server.ts"],
+    "splitting": false,
+    "sourcemap": true,
+    "clean": true
+  },
   "scripts": {
-    "build": "tsup ./src",
+    "build": "tsup",
     "start": "node ./dist/server.cjs",
     "dev": "tsx --watch src/server.ts",
     "lint": "eslint --ext .ts . --fix",
