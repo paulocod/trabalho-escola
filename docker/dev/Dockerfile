@@ -1,4 +1,6 @@
-FROM node:alpine
+FROM node:18-alpine
+
+ENV NODE_ENV=development
 
 WORKDIR /usr/src
 
