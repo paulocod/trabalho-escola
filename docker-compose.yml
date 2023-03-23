@@ -15,18 +15,6 @@ services:
     depends_on:
             - web-server
 
-  server-node2:
-    build:
-      context: .
-      dockerfile: ./docker/dev/Dockerfile
-    container_name: server-node2
-    environment:
-    - REDIS_URL=redis://redis
-    links:
-    - redis
-    depends_on:
-            - web-server
-
   redis:
     image: redis:latest
     container_name: redis

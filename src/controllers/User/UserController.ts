@@ -21,7 +21,7 @@ export class UserController {
     const { id } = req.params
 
     try {
-      const user = await this.userService.detailUserService(id)
+      const user = await this.userService.detailUsersService(id)
       return res.status(200).send(user)
     } catch (error) {
       return res.status(400).send({ error: 'Ocorreu um erro com a aplicação' })
