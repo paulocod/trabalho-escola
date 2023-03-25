@@ -495,7 +495,7 @@ userRouter.post("/user", ensureAuthenticated, async (req, res) => {
   return await userController.create(req, res);
 });
 userRouter.get("/hello", async (req, res) => {
-  return res.send("hello world");
+  return res.json("hello world");
 });
 userRouter.post("/auth", async (req, res) => {
   return await authController.create(req, res);
