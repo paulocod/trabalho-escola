@@ -162,26 +162,34 @@ var require_client = __commonJS({
 });
 
 // src/app.ts
+var Sentry = __toESM(require("@sentry/node"), 1);
+var Tracing = __toESM(require("@sentry/tracing"), 1);
+var import_compression = __toESM(require("compression"), 1);
 var import_cors = __toESM(require("cors"), 1);
 var import_config = require("dotenv/config");
 var import_express4 = __toESM(require("express"), 1);
+var import_express_async_errors = require("express-async-errors");
 var import_helmet = __toESM(require("helmet"), 1);
+var import_pino_http = require("pino-http");
 
-// src/routes/Health.ts
-var import_express = require("express");
-var healthRouter = (0, import_express.Router)();
-healthRouter.get("/health", async (_req, res, _next) => {
-  const healthcheck = {
-    uptime: process.uptime(),
-    message: "OK",
-    timestamp: Date.now()
-  };
-  try {
-    res.send(healthcheck);
-  } catch (error) {
-    healthcheck.message = error;
-    res.status(503).send();
+// src/helpers/logger.ts
+var import_pino = __toESM(require("pino"), 1);
+var logger = (0, import_pino.default)({
+  level: "debug",
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+      levelFirst: true
+    }
   }
+});
+
+// src/routes/Error.ts
+var import_express = require("express");
+var errorRouter = (0, import_express.Router)();
+errorRouter.get("/debug-sentry", function mainHandler(req, res) {
+  throw new Error("My first Sentry error!");
 });
 
 // src/routes/UrlRoutes.ts
@@ -190,8 +198,8 @@ var import_express2 = require("express");
 // src/prisma/index.ts
 var import_client = __toESM(require_client(), 1);
 var prisma = new import_client.PrismaClient({
-  errorFormat: "pretty",
-  log: ["query", "error"]
+  errorFormat: "pretty"
+  // log: ['query', 'error']
 });
 
 // src/repositories/UrlRepository.ts
@@ -474,7 +482,7 @@ var UserController = class {
   async detailUser(req, res) {
     const { id } = req.params;
     try {
-      const user = await this.userService.detailUserService(id);
+      const user = await this.userService.detailUsersService(id);
       return res.status(200).send(user);
     } catch (error) {
       return res.status(400).send({ error: "Ocorreu um erro com a aplica\xE7\xE3o" });
@@ -500,6 +508,9 @@ var userRouter = (0, import_express3.Router)();
 userRouter.post("/user", ensureAuthenticated, async (req, res) => {
   return await userController.create(req, res);
 });
+userRouter.get("/", async (req, res) => {
+  return res.send("hello world");
+});
 userRouter.post("/auth", async (req, res) => {
   return await authController.create(req, res);
 });
@@ -515,13 +526,31 @@ var options = {
   methods: "GET,POST",
   origin: "*"
 };
+var logHttp = (0, import_pino_http.pinoHttp)({ logger });
 var app = (0, import_express4.default)();
+Sentry.init({
+  dsn: process.env.SENTRY_DSN_URL,
+  integrations: [
+    new Sentry.Integrations.Http({ tracing: true }),
+    new Tracing.Integrations.Express({ app })
+  ],
+  tracesSampleRate: 1
+});
 app.use((0, import_helmet.default)());
 app.use((0, import_cors.default)(options));
 app.use(import_express4.default.json());
+app.use((0, import_compression.default)());
+app.use(logHttp);
+app.use(Sentry.Handlers.requestHandler());
+app.use(Sentry.Handlers.tracingHandler());
 app.use(userRouter);
 app.use(urlRouter);
-app.use(healthRouter);
+app.use(errorRouter);
+app.use(Sentry.Handlers.errorHandler());
+app.use(function onError(_err, req, res, next) {
+  console.log(_err);
+  return res.status(500).json({ msg: _err.message });
+});
 
 // src/server.ts
 var port = process.env.PORT ?? 3e3;
