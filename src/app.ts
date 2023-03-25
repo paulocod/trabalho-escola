@@ -6,8 +6,6 @@ import 'dotenv/config'
 import express from 'express'
 import 'express-async-errors'
 import helmet from 'helmet'
-import { pinoHttp } from 'pino-http'
-import { logger } from './helpers/logger'
 import { errorRouter } from './routes/Error'
 import { urlRouter } from './routes/UrlRoutes'
 import { userRouter } from './routes/UserRoutes'
@@ -16,7 +14,7 @@ const options: cors.CorsOptions = {
   methods: 'GET,POST',
   origin: '*'
 }
-const logHttp = pinoHttp({ logger })
+// const logHttp = pinoHttp({ logger })
 
 const app = express()
 Sentry.init({
@@ -31,7 +29,7 @@ app.use(helmet())
 app.use(cors(options))
 app.use(express.json())
 app.use(compression())
-app.use(logHttp)
+// app.use(logHttp)
 app.use(Sentry.Handlers.requestHandler())
 app.use(Sentry.Handlers.tracingHandler())
 app.use(userRouter)

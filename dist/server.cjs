@@ -170,20 +170,6 @@ var import_config = require("dotenv/config");
 var import_express4 = __toESM(require("express"), 1);
 var import_express_async_errors = require("express-async-errors");
 var import_helmet = __toESM(require("helmet"), 1);
-var import_pino_http = require("pino-http");
-
-// src/helpers/logger.ts
-var import_pino = __toESM(require("pino"), 1);
-var logger = (0, import_pino.default)({
-  level: "debug",
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-      levelFirst: true
-    }
-  }
-});
 
 // src/routes/Error.ts
 var import_express = require("express");
@@ -526,7 +512,6 @@ var options = {
   methods: "GET,POST",
   origin: "*"
 };
-var logHttp = (0, import_pino_http.pinoHttp)({ logger });
 var app = (0, import_express4.default)();
 Sentry.init({
   dsn: process.env.SENTRY_DSN_URL,
@@ -540,7 +525,6 @@ app.use((0, import_helmet.default)());
 app.use((0, import_cors.default)(options));
 app.use(import_express4.default.json());
 app.use((0, import_compression.default)());
-app.use(logHttp);
 app.use(Sentry.Handlers.requestHandler());
 app.use(Sentry.Handlers.tracingHandler());
 app.use(userRouter);
