@@ -8,7 +8,7 @@ const userRouter = Router()
 userRouter.post('/user', ensureAuthenticated, async (req: Request, res: Response) => {
   return await userController.create(req, res)
 })
-userRouter.get('/', async (req: Request, res: Response) => {
+userRouter.get('/hello', async (req: Request, res: Response) => {
   return res.send('hello world')
 })
 userRouter.post('/auth', async (req: Request, res: Response) => {

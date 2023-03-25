@@ -494,7 +494,7 @@ var userRouter = (0, import_express3.Router)();
 userRouter.post("/user", ensureAuthenticated, async (req, res) => {
   return await userController.create(req, res);
 });
-userRouter.get("/", async (req, res) => {
+userRouter.get("/hello", async (req, res) => {
   return res.send("hello world");
 });
 userRouter.post("/auth", async (req, res) => {
