@@ -28,7 +28,7 @@ export class UrlService {
 
     const urlCode = nanoid()
     const shortUrlCode = `acesse/${urlCode}`
-
+    console.log(shortUrlCode)
     const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrlCode })
     return urlResponse
   }
