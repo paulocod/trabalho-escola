@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto'
 import { redisClient } from '../../helpers/redis'
 import { type UserRepository } from '../../repositories/UserRepository'
+import { RabbitMqServer } from '../../helpers/rabbitMQ'
 
 interface UserProps {
   name: string
@@ -8,6 +9,7 @@ interface UserProps {
   password: string
 }
 
+const ampqCloud = process.env.CLOUDAMQP_URL ?? ''
 export class UserService {
   constructor (
     private userRepository: UserRepository
@@ -47,6 +49,9 @@ export class UserService {
     }
     console.log('banco')
     console.timeEnd()
+    const rabbit = new RabbitMqServer(ampqCloud)
+    await rabbit.start()
+    await rabbit.consumeQueue('queue', (message) => console.log(message.content.toString()))
     return user
   }
 

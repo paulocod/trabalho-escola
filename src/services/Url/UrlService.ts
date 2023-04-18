@@ -1,10 +1,12 @@
 import { nanoid } from 'nanoid'
 import { type UrlRepository } from '../../repositories/UrlRepository'
 import { prisma } from '../../prisma'
+import { RabbitMqServer } from '../../helpers/rabbitMQ'
 
 interface urlProps {
   url: string
 }
+const ampqCloud = process.env.CLOUDAMQP_URL ?? ''
 
 export class UrlService {
   constructor (
@@ -30,6 +32,9 @@ export class UrlService {
     const shortUrlCode = `acesse/${urlCode}`
     console.log(shortUrlCode)
     const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrlCode })
+    const rabbit = new RabbitMqServer(ampqCloud)
+    await rabbit.start()
+    await rabbit.publishInQueue('queue', JSON.stringify(urlResponse.short_url))
     return urlResponse
   }
 
