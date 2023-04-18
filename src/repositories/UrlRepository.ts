@@ -2,15 +2,15 @@ import { prisma } from '../prisma/index'
 
 interface urlProps {
   url: string
-  shortUrl: string
+  shortUrlCode: string
 }
 
 export class UrlRepository {
-  async createShortUrl ({ url, shortUrl }: urlProps) {
+  async createShortUrl ({ url, shortUrlCode }: urlProps) {
     const urlResponse = await prisma.url.create({
       data: {
         url,
-        short_url: shortUrl
+        short_url: shortUrlCode
       }
     })
 

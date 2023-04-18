@@ -1,4 +1,6 @@
+import { nanoid } from 'nanoid'
 import { type UrlRepository } from '../../repositories/UrlRepository'
+import { prisma } from '../../prisma'
 
 interface urlProps {
   url: string
@@ -14,34 +16,26 @@ export class UrlService {
       throw new Error('url is required')
     }
 
-    const objUrl = {
-      url
+    const urlExists = await prisma.url.findFirst({
+      where: {
+        url
+      }
+    })
+
+    if (urlExists) {
+      throw new Error('This Url Existed')
     }
 
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(objUrl)
-    }
+    const urlCode = nanoid()
+    const shortUrlCode = `acesse/${urlCode}`
 
-    const shortUrl = await fetch(
-      'https://api.encurtador.dev/encurtamentos',
-      options
-    )
-      .then(async (response: { json: () => any }) => response.json())
-      .then((data: { urlEncurtada: any }) => {
-        return data.urlEncurtada
-      })
-
-    const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrl })
+    const urlResponse = await this.urlRepository.createShortUrl({ url, shortUrlCode })
     return urlResponse
   }
 
   async findShortUrlService (shortUrl: string) {
     if (!shortUrl) {
-      throw new Error('error uma short url tem que ser passada')
+      throw new Error('Error a shorted url to be passed')
     }
 
     const shortUrlExist = await this.urlRepository.shortUrlExists(shortUrl)
