@@ -15,6 +15,16 @@ services:
     depends_on:
             - web-server
 
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: containerRabbit
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+
   redis:
     image: redis:latest
     container_name: redis
@@ -31,3 +41,7 @@ services:
         - "./nginx/nginx_params.conf:/etc/nginx/nginx.conf"
     ports:
         - "80:80"
+
+networks:
+  default:
+    driver: bridge
